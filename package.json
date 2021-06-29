@@ -1,6 +1,10 @@
 {
   "name": "node-psql",
   "version": "1.0.0",
+  "engines": {
+    "node": "14.x",
+    "npm": "7.x"
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,7 +16,6 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
-    "elasticsearch": "^16.7.2",
     "express": "^4.17.1",
     "express-validator": "^6.11.1",
     "fast-xml-parser": "^3.19.0",
