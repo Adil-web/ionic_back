@@ -14,7 +14,9 @@ app.use(function (req, res, next) {
 });
 app.use('/api', router)
 app.use('/auth', authRouter)
-
+app.get('/', (req, res) => {
+    res.end('<h1>Test</h1>')
+})
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}...`))
 
