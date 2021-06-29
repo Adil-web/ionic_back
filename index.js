@@ -2,7 +2,7 @@ const express = require('express')
 const router = require('./router/router')
 const authRouter = require('./router/authRouter')
 // const elasticSearch = require('elasticsearch')
-const PORT = process.env.port || 8080
+const PORT = process.env.port || 80
 const app = express()
 
 app.use(express.json())
