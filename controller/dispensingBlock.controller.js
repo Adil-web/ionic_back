@@ -96,7 +96,7 @@ let getXmlObject =
                 o_reconciling_department, o_reconciling_position, o_time_created, o_img_file
             } = req.body
         const iid = hex2dec("C057003")
-        const pass = sha3_512("21062021")
+        const pass = sha3_512("28062021")
         const auth = base64("<authdata msg_id=\"1\" user=\"sim.api\" password=\"" + pass + "\" msg_type=\"5000\" user_ip=\"127.0.0.1\" />")
         let xmlCreateObject = 
 `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
