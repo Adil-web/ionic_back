@@ -28,8 +28,8 @@ function toSharp() {
                 throw err
             } else {
                 imgBase64 = Buffer.from(data).toString('base64')
+                console.log('ok')
             }
-            console.log('ok')
         })
     })
     .catch( err => console.log(err))
