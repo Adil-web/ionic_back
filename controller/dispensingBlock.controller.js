@@ -29,10 +29,10 @@ function toSharp() {
             } else {
                 imgBase64 = Buffer.from(data).toString('base64')
             }
-            res.json('ok')
+            console.log('ok')
         })
     })
-    .catch( err => res.json(err))
+    .catch( err => console.log(err))
 }
 
 class DispensingBlockController {
@@ -126,6 +126,7 @@ let getXmlObject =
         fileName = Date.now().toString() + '.jpg'
         await img.mv(path.resolve(__dirname, '..', 'static', fileName))
         toSharp()
+        res.json('ok...')
     }
 
     async createDispensing(req, res) {
