@@ -10,6 +10,29 @@ const fs = require('fs');
 const jwt = require('jsonwebtoken')
 
 let imgBase64 = ""
+let fileName = ""
+
+function toSharp() {
+    sharp(path.resolve(__dirname, '..', 'static', fileName))
+    .resize(720)
+    .jpeg({ mozjpeg: true })
+    .toFile(fileName, (err, info) => {
+        if(err) {
+            console.log(err)
+        }
+    })
+    .toBuffer()
+    .then( () => {
+        fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
+            if (err) {
+                throw err
+            } else {
+                imgBase64 = Buffer.from(data).toString('base64')
+            }
+        })
+    })
+    .catch( err => console.log(err))
+}
 
 class DispensingBlockController {
 
@@ -99,48 +122,13 @@ let getXmlObject =
     async getImg(req, res) {
         const { img } = req.files
         console.log(img)
-        const fileName = Date.now().toString() + '.jpg'
+        fileName = Date.now().toString() + '.jpg'
         await img.mv(path.resolve(__dirname, '..', 'static', fileName))
-        
-            sharp(path.resolve(__dirname, '..', 'static', fileName))
-            .resize(720)
-            .jpeg({ mozjpeg: true })
-            .toFile(fileName, (err, info) => {
-                if(err) {
-                    console.log(err)
-                }
-                // fs.unlink(path.resolve(__dirname, '..', 'static', fileName), (err) => {
-                //     if (err) {
-                //         throw err;
-                //     }
-                //     fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
-                //         if (err) throw err
-                //         imgBase64 = Buffer.from(data).toString('base64')
-                //         fs.unlink(path.resolve(__dirname, '..', fileName), (err) => {
-                //             if (err) {
-                //                 res.json({error: err})
-                //                 throw err;
-                //             }
-                //         });
-                //         res.json(info)
-                //     })
-                // });
-            })
-            .toBuffer()
-            .then( () => {
-                fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
-                    if (err) {
-                        throw err
-                    } else {
-                        imgBase64 = Buffer.from(data).toString('base64')
-                    }
-                })
-                res.json('success')
-            })
-            .catch( err => console.log(err))
+        toSharp()
     }
 
     async createDispensing(req, res) {
+        console.log(fileName)
         const {o_field, o_settlement, o_chemical, o_consumption_rate, o_container, o_amount, 
                 o_issue_date, o_issue_time, o_bar_code, o_author, o_author_department, o_author_position,
                 o_date_created, o_recipient, o_recipient_department, o_recipient_position, o_reconciling,
