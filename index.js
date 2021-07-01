@@ -4,7 +4,7 @@ const authRouter = require('./router/authRouter')
 const fileUpload = require('express-fileupload')
 const path = require('path')
 // const elasticSearch = require('elasticsearch')
-const PORT = process.env.PORT || 80
+const PORT = process.env.PORT || 8080
 const app = express()
 
 app.use(function (req, res, next) {

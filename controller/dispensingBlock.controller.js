@@ -126,13 +126,20 @@ let getXmlObject =
                 //         res.json(info)
                 //     })
                 // });
-            });
+            })
+            .toBuffer()
+            .then( () => {
+                fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
+                    if (err) {
+                        throw err
+                    } else {
+                        imgBase64 = Buffer.from(data).toString('base64')
+                    }
+                })
+                res.json('success')
+            })
+            .catch( err => console.log(err))
         }, 0)
-        fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
-            if (err) throw err
-            imgBase64 = Buffer.from(data).toString('base64')
-            res.json(info)
-        })
     }
 
     async createDispensing(req, res) {
