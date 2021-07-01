@@ -111,22 +111,27 @@ let getXmlObject =
                     console.log(err)
                     return
                 }
-                fs.unlink(path.resolve(__dirname, '..', 'static', fileName), (err) => {
-                    if (err) {
-                        throw err;
-                    }
-                    fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
-                        if (err) throw err
-                        imgBase64 = Buffer.from(data).toString('base64')
-                        fs.unlink(path.resolve(__dirname, '..', fileName), (err) => {
-                            if (err) {
-                                res.json({error: err})
-                                throw err;
-                            }
-                        });
-                        res.json(info)
-                    })
-                });
+                // fs.unlink(path.resolve(__dirname, '..', 'static', fileName), (err) => {
+                //     if (err) {
+                //         throw err;
+                //     }
+                //     fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
+                //         if (err) throw err
+                //         imgBase64 = Buffer.from(data).toString('base64')
+                //         fs.unlink(path.resolve(__dirname, '..', fileName), (err) => {
+                //             if (err) {
+                //                 res.json({error: err})
+                //                 throw err;
+                //             }
+                //         });
+                //         res.json(info)
+                //     })
+                // });
+                fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
+                    if (err) throw err
+                    imgBase64 = Buffer.from(data).toString('base64')
+                    res.json(info)
+                })
             });
         }, 200)
     }
