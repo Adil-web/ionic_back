@@ -122,7 +122,7 @@ let getXmlObject =
 
     async getImg(req, res) {
         const { img } = req.files
-        imgBase64 = Buffer.from(img).toString('base64')
+        imgBase64 = Buffer.from(img.data).toString('base64')
         console.log(imgBase64)
 
         // fileName = Date.now().toString() + '.jpg'
