@@ -29,9 +29,10 @@ function toSharp() {
             } else {
                 imgBase64 = Buffer.from(data).toString('base64')
             }
+            res.json('ok')
         })
     })
-    .catch( err => console.log(err))
+    .catch( err => res.json(err))
 }
 
 class DispensingBlockController {
