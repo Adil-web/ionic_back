@@ -22,17 +22,6 @@ function toSharp() {
         }
     })
     .toBuffer()
-    .then( () => {
-        fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
-            if (err) {
-                throw err
-            } else {
-                imgBase64 = Buffer.from(data).toString('base64')
-                console.log('ok')
-            }
-        })
-    })
-    .catch( err => console.log(err))
 }
 
 class DispensingBlockController {
@@ -130,6 +119,14 @@ let getXmlObject =
     }
 
     async createDispensing(req, res) {
+        fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
+            if (err) {
+                throw err
+            } else {
+                imgBase64 = Buffer.from(data).toString('base64')
+                console.log('ok')
+            }
+        })
         console.log(fileName)
         const {o_field, o_settlement, o_chemical, o_consumption_rate, o_container, o_amount, 
                 o_issue_date, o_issue_time, o_bar_code, o_author, o_author_department, o_author_position,
