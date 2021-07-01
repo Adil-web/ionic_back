@@ -109,7 +109,6 @@ let getXmlObject =
             .toFile(fileName, (err, info) => {
                 if(err) {
                     console.log(err)
-                    return
                 }
                 // fs.unlink(path.resolve(__dirname, '..', 'static', fileName), (err) => {
                 //     if (err) {
@@ -127,13 +126,13 @@ let getXmlObject =
                 //         res.json(info)
                 //     })
                 // });
-                fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
-                    if (err) throw err
-                    imgBase64 = Buffer.from(data).toString('base64')
-                    res.json(info)
-                })
             });
-        }, 200)
+        }, 0)
+        fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
+            if (err) throw err
+            imgBase64 = Buffer.from(data).toString('base64')
+            res.json(info)
+        })
     }
 
     async createDispensing(req, res) {
