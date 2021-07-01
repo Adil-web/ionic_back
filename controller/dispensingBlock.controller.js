@@ -123,12 +123,11 @@ let getXmlObject =
     async getImg(req, res) {
         const { img } = req.files
         imgBase64 = Buffer.from(img.data).toString('base64')
-        console.log(imgBase64)
 
         // fileName = Date.now().toString() + '.jpg'
         // await img.mv(path.resolve(__dirname, '..', 'static', fileName))
         // toSharp()
-        // res.json('ok...')
+        res.json('ok...')
     }
 
     async createDispensing(req, res) {
@@ -169,7 +168,7 @@ let getXmlObject =
 </body>
 </sbapi>`
 
-        // console.log(xmlCreateObject)
+        console.log(xmlCreateObject)
 
         const config = {
             headers: {'Content-Type': 'text/xml'}
