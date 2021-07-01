@@ -102,7 +102,6 @@ let getXmlObject =
         const fileName = Date.now().toString() + '.jpg'
         await img.mv(path.resolve(__dirname, '..', 'static', fileName))
         
-        setTimeout(() => {
             sharp(path.resolve(__dirname, '..', 'static', fileName))
             .resize(720)
             .jpeg({ mozjpeg: true })
@@ -139,7 +138,6 @@ let getXmlObject =
                 res.json('success')
             })
             .catch( err => console.log(err))
-        }, 0)
     }
 
     async createDispensing(req, res) {
