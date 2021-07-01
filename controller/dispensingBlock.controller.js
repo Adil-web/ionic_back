@@ -22,6 +22,17 @@ function toSharp() {
         }
     })
     .toBuffer()
+    .then( () => {
+        fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
+            if (err) {
+                throw err
+            } else {
+                imgBase64 = Buffer.from(data).toString('base64')
+                console.log('ok')
+            }
+        })
+    })
+    .catch( err => console.log(err))
 }
 
 class DispensingBlockController {
@@ -111,22 +122,16 @@ let getXmlObject =
 
     async getImg(req, res) {
         const { img } = req.files
-        console.log(img)
-        fileName = Date.now().toString() + '.jpg'
-        await img.mv(path.resolve(__dirname, '..', 'static', fileName))
-        toSharp()
-        res.json('ok...')
+        imgBase64 = Buffer.from(img).toString('base64')
+        console.log(imgBase64)
+
+        // fileName = Date.now().toString() + '.jpg'
+        // await img.mv(path.resolve(__dirname, '..', 'static', fileName))
+        // toSharp()
+        // res.json('ok...')
     }
 
     async createDispensing(req, res) {
-        fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
-            if (err) {
-                throw err
-            } else {
-                imgBase64 = Buffer.from(data).toString('base64')
-                console.log('ok')
-            }
-        })
         console.log(fileName)
         const {o_field, o_settlement, o_chemical, o_consumption_rate, o_container, o_amount, 
                 o_issue_date, o_issue_time, o_bar_code, o_author, o_author_department, o_author_position,
