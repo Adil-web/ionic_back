@@ -4,8 +4,15 @@ const sha1 = require('js-sha1')
 const sha3_512 = require('js-sha3').sha3_512
 const axios = require('axios')
 const parser = require('fast-xml-parser')
+const path = require('path')
+const sharp = require('sharp')
+const fs = require('fs');
+const jwt = require('jsonwebtoken')
+
+let imgBase64 = ""
 
 class DispensingBlockController {
+
     async test(req, res) {
         // const {name, surname} = req.body
         // console.log(req.body)
@@ -89,15 +96,51 @@ let getXmlObject =
         res.json(tests.rows)
     }
 
+    async getImg(req, res) {
+        const { img } = req.files
+        console.log(img)
+        const fileName = Date.now().toString() + '.jpg'
+        await img.mv(path.resolve(__dirname, '..', 'static', fileName))
+        
+        setTimeout(() => {
+            sharp(path.resolve(__dirname, '..', 'static', fileName))
+            .resize(720)
+            .jpeg({ mozjpeg: true })
+            .toFile(fileName, (err, info) => {
+                if(err) {
+                    console.log(err)
+                    return
+                }
+                fs.unlink(path.resolve(__dirname, '..', 'static', fileName), (err) => {
+                    if (err) {
+                        throw err;
+                    }
+                    fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
+                        if (err) throw err
+                        imgBase64 = Buffer.from(data).toString('base64')
+                        fs.unlink(path.resolve(__dirname, '..', fileName), (err) => {
+                            if (err) {
+                                res.json({error: err})
+                                throw err;
+                            }
+                        });
+                        res.json(info)
+                    })
+                });
+            });
+        }, 200)
+    }
+
     async createDispensing(req, res) {
         const {o_field, o_settlement, o_chemical, o_consumption_rate, o_container, o_amount, 
                 o_issue_date, o_issue_time, o_bar_code, o_author, o_author_department, o_author_position,
                 o_date_created, o_recipient, o_recipient_department, o_recipient_position, o_reconciling,
-                o_reconciling_department, o_reconciling_position, o_time_created, o_img_file
+                o_reconciling_department, o_reconciling_position, o_time_created, o_img_file, token
             } = req.body
+        const { username, password } = jwt.decode(token)
         const iid = hex2dec("C057003")
-        const pass = sha3_512("21062021")
-        const auth = base64("<authdata msg_id=\"1\" user=\"sim.api\" password=\"" + pass + "\" msg_type=\"5000\" user_ip=\"127.0.0.1\" />")
+        const pass = sha3_512(password)
+        const auth = base64("<authdata msg_id=\"1\" user=\"" + username + "\" password=\"" + pass + "\" msg_type=\"5000\" user_ip=\"127.0.0.1\" />")
         let xmlCreateObject = 
 `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <sbapi>
@@ -120,10 +163,12 @@ let getXmlObject =
 <arg name=\"bar_code\">${o_bar_code}</arg>
 <arg name=\"recipient\">${o_recipient}</arg>
 <arg name=\"reconciling\">${o_reconciling}</arg>
-<arg name=\"photo\">${o_img_file}</arg>
+<arg name=\"photo\">${imgBase64}</arg>
 </function>
 </body>
 </sbapi>`
+
+        // console.log(xmlCreateObject)
 
         const config = {
             headers: {'Content-Type': 'text/xml'}
@@ -133,7 +178,6 @@ let getXmlObject =
 
         await axios.post('http://31.169.9.82/api/', xmlCreateObject, config).then((response) => {
             dataXml = parser.parse(response.data)
-            // console.log(xmlCreateObject)
             dataXml = dataXml.sbapi.body.response
             console.log(response.data)
         }).catch((err) => console.log(err))
@@ -152,13 +196,11 @@ let getXmlObject =
 </function>
 </body>
 </sbapi>`
+
 //192.168.21.239
 //31.169.9.82
         await axios.post('http://31.169.9.82/api/', getXmlObject, config).then((response) => {
             let getXml = parser.parse(response.data)
-            // console.log(response.data)
-            // console.log(getXml.sbapi.body.response.objects)
-            // console.log(getXml.sbapi.body.response.objects.forEach(e=> e.object.number))
             let get = {objects: []}
             get.objects.push(
                 {
@@ -169,7 +211,6 @@ let getXmlObject =
                 }
             )
             res.json('Успешно...')
-            // console.log(get)
         }).catch((err) => console.log(err))
     }
 
