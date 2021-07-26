@@ -9,31 +9,7 @@ const sharp = require('sharp')
 const fs = require('fs');
 const jwt = require('jsonwebtoken')
 
-let imgBase64 = ""
-let fileName = ""
-
-function toSharp() {
-    sharp(path.resolve(__dirname, '..', 'static', fileName))
-    .resize(720)
-    .jpeg({ mozjpeg: true })
-    .toFile(fileName, (err, info) => {
-        if(err) {
-            console.log(err)
-        }
-    })
-    .toBuffer()
-    .then( () => {
-        fs.readFile(path.resolve(__dirname, '..', fileName), (err, data) => {
-            if (err) {
-                throw err
-            } else {
-                imgBase64 = Buffer.from(data).toString('base64')
-                console.log('ok')
-            }
-        })
-    })
-    .catch( err => console.log(err))
-}
+let imgBase64 = []
 
 class DispensingBlockController {
 
@@ -121,22 +97,55 @@ let getXmlObject =
     }
 
     async getImg(req, res) {
+        // console.log(req.files)
         const { img } = req.files
-        imgBase64 = Buffer.from(img.data).toString('base64')
-
-        // fileName = Date.now().toString() + '.jpg'
-        // await img.mv(path.resolve(__dirname, '..', 'static', fileName))
-        // toSharp()
-        res.json('ok...')
+        console.log(img)
+        // const fileName = Date.now().toString() + '.jpg'
+        // await img.mv(path.resolve(__dirname, fileName))
+        try {
+            if(img.length > 1) {
+                img.forEach(el => {
+                    imgBase64.push(Buffer.from(el.data).toString('base64'))
+                })
+                res.json('imgBase64 success...')
+            }
+            imgBase64.push(Buffer.from(img.data).toString('base64'))
+            res.json('imgBase64 success...')
+        } catch (e) {
+            console.log(e)
+        }
+        console.log(imgBase64)
+        // setTimeout(() => {
+        //     sharp(path.resolve(__dirname, fileName))
+        //     .resize(720)
+        //     .jpeg({ mozjpeg: true })
+        //     .toFile(fileName, (err, info) => {
+        //         if(err) {
+        //             console.log(err)
+        //             return
+        //         }
+        //         fs.unlink(path.resolve(__dirname, fileName), (error) => {
+        //             if (error) {
+        //                 throw error;
+        //             }
+        //             fs.readFile(path.resolve(__dirname, '..', fileName), (er, data) => {
+        //                 if (er) throw er
+        //                 imgBase64 = Buffer.from(data).toString('base64')
+        //                 fs.unlink(path.resolve(__dirname, '..', fileName), (e) => {
+        //                     if (e) {
+        //                         res.json({error: e})
+        //                         throw e;
+        //                     }
+        //                 });
+        //                 res.json(info)
+        //             })
+        //         });
+        //     });
+        // }, 200)
     }
 
     async createDispensing(req, res) {
-        console.log(fileName)
-        const {o_field, o_settlement, o_chemical, o_consumption_rate, o_container, o_amount, 
-                o_issue_date, o_issue_time, o_bar_code, o_author, o_author_department, o_author_position,
-                o_date_created, o_recipient, o_recipient_department, o_recipient_position, o_reconciling,
-                o_reconciling_department, o_reconciling_position, o_time_created, o_img_file, token
-            } = req.body
+        const {o_chemical, litersNumber, o_organization, o_bar_code, o_recipient, o_date_of_issue, o_time_of_issue, token} = req.body
         const { username, password } = jwt.decode(token)
         const iid = hex2dec("C057003")
         const pass = sha3_512(password)
@@ -151,24 +160,20 @@ let getXmlObject =
 <auth pwd=\"hash\">${auth}</auth>
 </header>
 <body>
-<function name=\"f_api_appc_create_object\">
-<arg name=\"field_number\">${o_field}</arg>
-<arg name=\"locality\">${o_settlement}</arg>
-<arg name=\"drug_name\">${o_chemical}</arg>
-<arg name=\"chemical_consumption_rate\">${o_consumption_rate}</arg>
-<arg name=\"container\">${o_container}</arg>
-<arg name=\"quantity\">${o_amount}</arg>
-<arg name=\"date_of_issue\">${o_issue_date}</arg>
-<arg name=\"time_of_issue\">${o_issue_time}</arg>
-<arg name=\"bar_code\">${o_bar_code}</arg>
+<function name=\"f_api_tar_create_object\">
 <arg name=\"recipient\">${o_recipient}</arg>
-<arg name=\"reconciling\">${o_reconciling}</arg>
-<arg name=\"photo\">${imgBase64}</arg>
+<arg name=\"organization\">${o_organization}</arg>
+<arg name=\"drug_name\">${o_chemical}</arg>
+<arg name=\"container\">${litersNumber}</arg>
+<arg name=\"bar_code\">${o_bar_code}</arg>
+<arg name=\"date_of_issue\">${o_date_of_issue}</arg>
+<arg name=\"time_of_issue\">${o_time_of_issue}</arg>
+<arg name=\"photo\">${imgBase64.length > 1 ? imgBase64 : imgBase64[0]}</arg>
 </function>
 </body>
 </sbapi>`
 
-        console.log(xmlCreateObject)
+        // console.log(xmlCreateObject)
 
         const config = {
             headers: {'Content-Type': 'text/xml'}
@@ -191,7 +196,7 @@ let getXmlObject =
 <auth pwd=\"hash\">${auth}</auth>
 </header>
 <body>
-<function name=\"f_api_appc_get_object\">
+<function name=\"f_api_tar_get_object\">
 <arg name=\"object\">${dataXml}</arg>
 </function>
 </body>
@@ -199,9 +204,14 @@ let getXmlObject =
 
 //192.168.21.239
 //31.169.9.82
+        const options = {
+            attributeNamePrefix : "",
+            ignoreAttributes : false,
+        }
         await axios.post('http://31.169.9.82/api/', getXmlObject, config).then((response) => {
-            let getXml = parser.parse(response.data)
+            let getXml = parser.parse(response.data, options)
             let get = {objects: []}
+            console.log(getXml.sbapi.body.response)
             get.objects.push(
                 {
                     number: getXml.sbapi.body.response.number,
@@ -213,29 +223,6 @@ let getXmlObject =
             res.json('Успешно...')
         }).catch((err) => console.log(err))
     }
-
-    // async getUsers(req, res) {
-    //     const users = await db.query('SELECT * FROM person')
-    //     res.json(users.rows)
-    // }
-    
-    // async getOneUser(req, res) {
-    //     const id = req.params.id
-    //     const user = await db.query('SELECT * FROM person WHERE id = $1', [id])
-    //     res.json(user.rows[0])
-    // }
-    
-    // async updateUser(req, res) {
-    //     const {id, name, surname} = req.body
-    //     const user = await db.query('UPDATE person set name = $1, set surname = $2 where id = $3 RETURNING *', [name, surname, id])
-    //     res.json(user.rows[0])
-    // }
-    
-    // async deleteUser(req, res) {
-    //     const id = req.params.id
-    //     const user = await db.query('DELETE FROM person WHERE id = $1', [id])
-    //     res.json(user.rows[0])
-    // }
 }
 
 module.exports = new DispensingBlockController()
