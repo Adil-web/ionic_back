@@ -173,7 +173,7 @@ let getXmlObject =
 </body>
 </sbapi>`
 
-        // console.log(xmlCreateObject)
+        console.log(xmlCreateObject)
 
         const config = {
             headers: {'Content-Type': 'text/xml'}
