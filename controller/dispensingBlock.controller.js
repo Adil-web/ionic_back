@@ -47,7 +47,7 @@ class DispensingBlockController {
 
         let dataXml
 
-        await axios.post('http://31.169.9.82/api/', xmlCreateObject, config).then((response) => {
+        await axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config).then((response) => {
             dataXml = parser.parse(response.data)
             // console.log(xmlCreateObject)
             console.log(response.data)
@@ -68,7 +68,7 @@ let getXmlObject =
 </function>
 </body>
 </sbapi>`
-        axios.post('http://31.169.9.82/api/', getXmlObject, config).then((response) => {
+        axios.post('https://bpm.atameken-agro.com/api/', getXmlObject, config).then((response) => {
             let getXml = parser.parse(response.data)
             console.log(response.data)
             console.log(getXml.sbapi.body.response.objects)
@@ -181,7 +181,7 @@ let getXmlObject =
 
         let dataXml
 
-        await axios.post('http://31.169.9.82/api/', xmlCreateObject, config).then((response) => {
+        await axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config).then((response) => {
             dataXml = parser.parse(response.data)
             dataXml = dataXml.sbapi.body.response
             console.log(response.data)
@@ -208,7 +208,7 @@ let getXmlObject =
             attributeNamePrefix : "",
             ignoreAttributes : false,
         }
-        await axios.post('http://31.169.9.82/api/', getXmlObject, config).then((response) => {
+        await axios.post('https://bpm.atameken-agro.com/api/', getXmlObject, config).then((response) => {
             let getXml = parser.parse(response.data, options)
             let get = {objects: []}
             console.log(getXml.sbapi.body.response)
