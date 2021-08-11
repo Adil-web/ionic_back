@@ -66,7 +66,7 @@ class authController {
                 ignoreAttributes : false,
             }
             let dataXml
-            axios.post('http://31.169.9.82/api/', xmlCreateObject, config)
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     dataXml = parser.parse(response.data, options)
                     dataXml = dataXml.sbapi.header.error
@@ -111,7 +111,7 @@ class authController {
                 ignoreAttributes : false,
             }
             let dataXml
-            axios.post('http://31.169.9.82/api/', xmlCreateObject, config)
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     dataXml = parser.parse(response.data, options)
                     dataXml = dataXml.sbapi.body.response.dicts.dict
@@ -152,7 +152,7 @@ class authController {
                 ignoreAttributes : false,
             }
             let dataXml
-            axios.post('http://31.169.9.82/api/', xmlCreateObject, config)
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     dataXml = parser.parse(response.data, options)
                     dataXml = dataXml.sbapi.body.response.users.user
@@ -193,7 +193,7 @@ class authController {
                 ignoreAttributes : false,
             }
             let dataXml
-            axios.post('http://31.169.9.82/api/', xmlCreateObject, config)
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     dataXml = parser.parse(response.data, options)
                     dataXml = dataXml.sbapi.body.response.users.user
