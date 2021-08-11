@@ -36,7 +36,7 @@ class TareController {
                 ignoreAttributes : false,
             }
             let dataXml
-            axios.post('http://31.169.9.82/api/', xmlCreateObject, config)
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     dataXml = parser.parse(response.data, options)
                     dataXml = dataXml.sbapi.body.response.dicts.dict
@@ -79,7 +79,7 @@ class TareController {
                 ignoreAttributes : false,
             }
             let dataXml
-            axios.post('http://31.169.9.82/api/', xmlCreateObject, config)
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     dataXml = parser.parse(response.data, options)
                     dataXml = dataXml.sbapi.body.response.dicts.dict
@@ -122,7 +122,7 @@ class TareController {
                 ignoreAttributes : false,
             }
             let dataXml
-            axios.post('http://31.169.9.82/api/', xmlCreateObject, config)
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     dataXml = parser.parse(response.data, options)
                     console.log(dataXml.sbapi.body.response)
@@ -163,7 +163,7 @@ class TareController {
 
         let dataXml
 
-        await axios.post('http://31.169.9.82/api/', xmlCreateObject, config).then((response) => {
+        await axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config).then((response) => {
             dataXml = parser.parse(response.data)
             dataXml = dataXml.sbapi.body.response
             console.log(response.data)
