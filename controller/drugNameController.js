@@ -35,7 +35,7 @@ class DrugNameController {
                 ignoreAttributes : false,
             }
             let dataXml
-            axios.post('http://31.169.9.82/api/', xmlCreateObject, config)
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     dataXml = parser.parse(response.data, options)
                     dataXml = dataXml.sbapi.body.response
