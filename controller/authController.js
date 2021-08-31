@@ -68,9 +68,10 @@ class authController {
             }
             let dataXml
 //             https://bpm.atameken-agro.com/api/index.php
-            axios.post('https://jsonplaceholder.typicode.com/posts/', xmlCreateObject, config)
+            res.json("test")
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
-                    res.json(response)
+//                     res.json(response)
                     try {
                         dataXml = parser.parse(response.data, options)
                         dataXml = dataXml.sbapi.header.error
