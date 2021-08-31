@@ -42,7 +42,7 @@ class authController {
     async login(req, res) {
         try {
             const {username, password} = req.body
-            res.json({username, password})
+//             res.json({username, password})
             const iid = hex2dec("C057003")
             const pass = sha3_512(password)
             const auth = base64("<authdata msg_id=\"1\" user=\""+username+"\" password=\"" + pass + "\" msg_type=\"9000\" user_ip=\"127.0.0.1\" />")
@@ -67,16 +67,16 @@ class authController {
                 ignoreAttributes : false,
             }
             let dataXml
-//             axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
-//                 .then(async response => {
-//                     dataXml = parser.parse(response.data, options)
-//                     dataXml = dataXml.sbapi.header.error
-//                     if(dataXml['id'] == '0') {
-//                         const token = generateAccessToken(username, password)
-//                         return res.json({token})
-//                     }
-//                     return res.status(400).json({message: 'Неверный логин или пароль'})
-//                 }).catch(e => console.log(e))
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
+                .then(async response => {
+                    dataXml = parser.parse(response.data, options)
+                    dataXml = dataXml.sbapi.header.error
+                    if(dataXml['id'] == '0') {
+                        const token = generateAccessToken(username, password)
+                        return res.json({token})
+                    }
+                    return res.status(400).json({message: 'Неверный логин или пароль'})
+                }).catch(e => res.json(e))
         } catch (e) {
             console.log(e)
             res.status(400).json({message: "Login error"})
