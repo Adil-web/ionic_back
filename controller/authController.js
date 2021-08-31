@@ -68,14 +68,21 @@ class authController {
             }
             let dataXml
             axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
-                .then(response => {
-                    dataXml = parser.parse(response.data, options)
-                    dataXml = dataXml.sbapi.header.error
-                    if (dataXml['id'] == '0') {
-                        const token = generateAccessToken(username, password)
-                        return res.json({ token })
+                .then(async response => {
+                    try {
+                        dataXml = parser.parse(response.data, options)
+                        dataXml = dataXml.sbapi.header.error
+                        if (dataXml['id'] == '0') {
+                            const token = generateAccessToken(username, password)
+                            return res.json({ token })
+                        }
+                        return res.status(400).json({ message: 'Неверный логин или пароль' })
+                    } catch (e) {
+                        fs.appendFile("auth-logs" + ".txt", e, function (error) {
+                            if (error) throw error
+                        })
+                        res.json(e)
                     }
-                    return res.status(400).json({ message: 'Неверный логин или пароль' })
                 }).catch(e => {
                     fs.appendFile("auth-logs" + ".txt", e, function (error) {
                         if (error) throw error
