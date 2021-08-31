@@ -41,13 +41,12 @@ class authController {
     
     async login(req, res) {
         try {
-            const {username, password} = req.body
-//             res.json({username, password})
+            const { username, password } = req.body
             const iid = hex2dec("C057003")
             const pass = sha3_512(password)
-            const auth = base64("<authdata msg_id=\"1\" user=\""+username+"\" password=\"" + pass + "\" msg_type=\"9000\" user_ip=\"127.0.0.1\" />")
-            let xmlCreateObject = 
-    `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+            const auth = base64("<authdata msg_id=\"1\" user=\"" + username + "\" password=\"" + pass + "\" msg_type=\"9000\" user_ip=\"127.0.0.1\" />")
+            let xmlCreateObject =
+                `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
     <sbapi>
     <header>
     <interface id=\"${iid}\" version=\"8\" />
@@ -60,26 +59,34 @@ class authController {
     </sbapi>`
 
             const config = {
-                headers: {'Content-Type': 'text/xml'}
+                headers: { 'Content-Type': 'text/xml' }
             }
             const options = {
-                attributeNamePrefix : "",
-                ignoreAttributes : false,
+                attributeNamePrefix: "",
+                ignoreAttributes: false,
             }
             let dataXml
             axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     dataXml = parser.parse(response.data, options)
                     dataXml = dataXml.sbapi.header.error
-                    if(dataXml['id'] == '0') {
+                    if (dataXml['id'] == '0') {
                         const token = generateAccessToken(username, password)
-                        return res.json({token})
+                        return res.json({ token })
                     }
-                    return res.status(400).json({message: 'Неверный логин или пароль'})
-                }).catch(e => res.json(e))
-        } catch (e) {
-            console.log(e)
-            res.status(400).json({message: "Login error"})
+                    return res.status(400).json({ message: 'Неверный логин или пароль' })
+                }).catch(e => {
+                    fs.appendFile("auth-logs" + Date.now().toString() + ".txt", e, function (error) {
+                        if (error) throw error
+                    })
+                    res.json(e)
+                })
+        } catch (err) {
+            console.log(err)
+            fs.appendFile("auth-logs" + Date.now().toString() + ".txt", err, function (error) {
+                if (error) throw error
+            })
+            res.status(400).json({ message: "Login error" })
         }
     }
 
