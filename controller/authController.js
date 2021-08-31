@@ -67,8 +67,8 @@ class authController {
                 ignoreAttributes: false,
             }
             let dataXml
-            
-            axios.post('https://bpm.atameken-agro.com/api/index.php', xmlCreateObject, config)
+//             https://bpm.atameken-agro.com/api/index.php
+            axios.post('https://jsonplaceholder.typicode.com/posts/', xmlCreateObject, config)
                 .then(async response => {
                     res.json(response)
                     try {
