@@ -68,7 +68,7 @@ class authController {
             }
             let dataXml
 //             https://bpm.atameken-agro.com/api/index.php
-            res.json("test")
+            res.end(xmlCreateObject)
             axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
 //                     res.json(response)
