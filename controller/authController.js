@@ -8,6 +8,7 @@ const { hex2dec, base64 } = require('../decoders')
 const sha1 = require('js-sha1')
 const sha3_512 = require('js-sha3').sha3_512
 const parser = require('fast-xml-parser')
+const fs = require("fs");
 
 const generateAccessToken = (username, password) => {
     const payload = {
@@ -67,7 +68,7 @@ class authController {
             }
             let dataXml
             axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
-                .then(async response => {
+                .then(response => {
                     dataXml = parser.parse(response.data, options)
                     dataXml = dataXml.sbapi.header.error
                     if (dataXml['id'] == '0') {
@@ -76,14 +77,14 @@ class authController {
                     }
                     return res.status(400).json({ message: 'Неверный логин или пароль' })
                 }).catch(e => {
-                    fs.appendFile("auth-logs" + Date.now().toString() + ".txt", e, function (error) {
+                    fs.appendFile("auth-logs" + ".txt", e, function (error) {
                         if (error) throw error
                     })
                     res.json(e)
                 })
         } catch (err) {
             console.log(err)
-            fs.appendFile("auth-logs" + Date.now().toString() + ".txt", err, function (error) {
+            fs.appendFile("auth-logs" + ".txt", err, function (error) {
                 if (error) throw error
             })
             res.status(400).json({ message: "Login error" })
