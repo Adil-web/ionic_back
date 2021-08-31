@@ -47,17 +47,17 @@ class authController {
             const pass = sha3_512(password)
             const auth = base64("<authdata msg_id=\"1\" user=\"" + username + "\" password=\"" + pass + "\" msg_type=\"9000\" user_ip=\"127.0.0.1\" />")
             let xmlCreateObject =
-                `<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-    <sbapi>
-    <header>
-    <interface id=\"${iid}\" version=\"8\" />
-    <message ignore_id=\"yes\" id=\"1\" type=\"9000\" created=\"2021-05-05T07:14:16z\"/>
-    <error id=\"0\" />
-    <auth pwd=\"hash\">${auth}</auth>
-    </header>
-    <body>
-    </body>
-    </sbapi>`
+`<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<sbapi>
+<header>
+<interface id=\"${iid}\" version=\"8\" />
+<message ignore_id=\"yes\" id=\"1\" type=\"9000\" created=\"2021-05-05T07:14:16z\"/>
+<error id=\"0\" />
+<auth pwd=\"hash\">${auth}</auth>
+</header>
+<body>
+</body>
+</sbapi>`
 
             const config = {
                 headers: { 'Content-Type': 'text/xml' }
