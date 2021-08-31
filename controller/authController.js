@@ -67,7 +67,7 @@ class authController {
                 ignoreAttributes: false,
             }
             let dataXml
-            axios.post('http://192.168.21.239/api/', xmlCreateObject, config)
+            axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
                     try {
                         dataXml = parser.parse(response.data, options)
