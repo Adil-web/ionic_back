@@ -40,6 +40,16 @@ class authController {
     //     }        
     // }
     
+    async testLogin(req, res) {
+        try {
+            const { username, password } = req.body
+            const token = generateAccessToken(username, password)
+            return res.json({ token })
+        } catch(e) {
+            res.end(e)
+        }
+    }
+    
     async login(req, res) {
         try {
             const { username, password } = req.body
