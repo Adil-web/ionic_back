@@ -67,18 +67,15 @@ class authController {
                 ignoreAttributes: false,
             }
             let dataXml
-//             https://bpm.atameken-agro.com/api/index.php
-//             res.end(xmlCreateObject)
             axios.post('https://bpm.atameken-agro.com/api/', xmlCreateObject, config)
                 .then(async response => {
-                    res.json(response)
                     try {
                         dataXml = parser.parse(response.data, options)
                         dataXml = dataXml.sbapi.header.error
                         if (dataXml['id'] == '0') {
                             const token = generateAccessToken(username, password)
                             console.log(token)
-                            res.json(token)
+                            return res.json({ token })
                         }
                         return res.status(400).json({ message: 'Неверный логин или пароль' })
                     } catch (e) {
