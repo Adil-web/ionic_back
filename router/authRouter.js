@@ -10,7 +10,7 @@ const roleMiddleware = require('../middleware/roleMiddleware')
 //         check('password', "Пороль должен быть больше 4 и меньше 10 символов").isLength({min: 4, max: 10}),
 //     ], controller.registration)
 router.post('/login', controller.login)
-router.post('/tlogin', controller.testLogin)
+// router.post('/tlogin', controller.testLogin)
 router.post('/user', authMiddleware, controller.getUser)
 router.post('/users', controller.getUsers)
 router.get('/dicts', authMiddleware, controller.getDicts)
