@@ -77,7 +77,8 @@ class authController {
                         dataXml = dataXml.sbapi.header.error
                         if (dataXml['id'] == '0') {
                             const token = generateAccessToken(username, password)
-                            return res.json({ token })
+                            console.log({token})
+                            res.json({ token })
                         }
                         return res.status(400).json({ message: 'Неверный логин или пароль' })
                     } catch (e) {
