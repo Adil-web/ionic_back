@@ -1,8 +1,8 @@
 const Router = require('express')
 const router = new Router()
 const controller = require('../controller/authController')
-const { check } = require('express-validator')
-const authMiddleware = require('../middleware/authMiddleware')
+// const { check } = require('express-validator')
+// const authMiddleware = require('../middleware/authMiddleware')
 const roleMiddleware = require('../middleware/roleMiddleware')
 
 // router.post('/register', [
@@ -11,7 +11,7 @@ const roleMiddleware = require('../middleware/roleMiddleware')
 //     ], controller.registration)
 router.post('/login', controller.login)
 // router.post('/tlogin', controller.testLogin)
-router.post('/user', authMiddleware, controller.getUser)
+router.post('/user', controller.getUser)
 router.post('/users', controller.getUsers)
 router.get('/dicts', authMiddleware, controller.getDicts)
 
